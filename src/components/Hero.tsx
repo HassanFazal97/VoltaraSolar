@@ -18,19 +18,19 @@ const SPLIT_SCALE = 0.62;
 const TRANSITION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const TITLE_CLASS =
-  "text-6xl font-bold text-[var(--voltara-navy)] sm:text-7xl md:text-8xl lg:text-9xl";
+  "text-5xl font-bold text-[var(--voltara-navy)] sm:text-6xl md:text-7xl lg:text-8xl";
 
 const SUBTITLE_CLASS =
-  "text-xl font-bold uppercase tracking-[0.45em] text-[var(--voltara-gold)] sm:text-2xl md:text-3xl";
+  "text-lg font-bold uppercase tracking-[0.45em] text-[var(--voltara-gold)] sm:text-xl md:text-2xl";
 
 const LOGO_SIZE_CLASS =
-  "h-64 w-64 sm:h-80 sm:w-80 md:h-96 md:w-96 lg:h-[28rem] lg:w-[28rem]";
+  "h-52 w-52 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:h-96 lg:w-96";
 
 const LOGO_TITLE_OFFSET_CLASS =
-  "-mt-8 sm:-mt-10 md:-mt-14 lg:-mt-20";
+  "-mt-6 sm:-mt-8 md:-mt-10 lg:-mt-14";
 
 const LOGO_STACK_OFFSET_CLASS =
-  "-mt-12 sm:-mt-16 md:-mt-24 lg:-mt-32";
+  "-mt-10 sm:-mt-12 md:-mt-20 lg:-mt-24";
 
 const PRIMARY_CTA_CLASS =
   "inline-flex items-center justify-center rounded-full bg-[var(--voltara-navy)] px-7 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--voltara-cream)] transition-colors hover:bg-[var(--voltara-gold)] hover:text-[var(--voltara-navy)]";
@@ -39,9 +39,9 @@ const WHATSAPP_CTA_CLASS =
   "inline-flex items-center justify-center gap-2.5 rounded-full bg-[var(--voltara-whatsapp)] px-7 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#85b435]";
 
 const BULLETS = [
-  "Custom-designed for your roof and energy use",
-  "25-year performance and workmanship warranty",
-  "$0 down — finance, lease, or own outright",
+  "Designed for Lahore's weather, roofs, and energy needs",
+  "Ideal for homes, shops, offices, schools, and warehouses",
+  "Complete support from survey to installation and net metering",
 ];
 
 function LetterGroup({ letters }: { letters: string[] }) {
@@ -229,11 +229,14 @@ function RightPanel({ phase, animated }: { phase: Phase; animated: boolean }) {
   if (!animated) {
     return (
       <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-        <h2 className="text-4xl font-semibold leading-tight text-[var(--voltara-navy)] md:text-5xl lg:text-6xl">
-          Power your home with the sun.
+        <h2 className="text-4xl font-bold leading-tight text-[var(--voltara-navy)] md:text-5xl lg:text-6xl">
+          Beat Rising Electricity Bills with Solar Built for Lahore.
         </h2>
         <p className="max-w-xl text-base text-[var(--voltara-navy)]/70 md:text-lg">
-           Premium rooftop solar — engineered, installed, and guaranteed right here in Lahore. Power your home with the sun and keep it running when the grid goes dark.
+          Switch to a professionally designed solar system for your home or
+          business. From consultation to installation and net metering, Voltara
+          Solar helps you save more, stay powered, and invest in long-term energy
+          independence.
         </p>
         <ul className="flex flex-col gap-3">
           {BULLETS.map((bullet) => (
@@ -254,15 +257,17 @@ function RightPanel({ phase, animated }: { phase: Phase; animated: boolean }) {
     >
       <motion.h2
         variants={rightItemVariants}
-        className="text-4xl font-semibold leading-tight text-[var(--voltara-navy)] md:text-5xl lg:text-6xl"
+        className="text-3xl font-bold leading-tight text-[var(--voltara-navy)] md:text-4xl lg:text-5xl"
       >
-        Power your home with the sun.
+        Beat Rising Bills with Solar in Lahore
       </motion.h2>
       <motion.p
         variants={rightItemVariants}
         className="max-w-xl text-base text-[var(--voltara-navy)]/70 md:text-lg"
       >
-        Premium rooftop solar engineered, installed, and guaranteed — built to outlast your mortgage.
+        Reliable solar systems for homes and businesses across Lahore, built to lower costs and keep you powered. From consultation to installation and net metering, Voltara
+        Solar helps you save more, stay powered, and invest in long-term energy
+        independence.
       </motion.p>
       <motion.ul variants={rightItemVariants} className="flex flex-col gap-3">
         {BULLETS.map((bullet) => (
