@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import type { ElementType } from "react";
+import type { ElementType, ReactNode } from "react";
 
 type HeadingTag = "h1" | "h2" | "h3";
 
@@ -35,7 +35,10 @@ export function AnimatedHeadline({
   const prefersReducedMotion = useReducedMotion();
 
   if (prefersReducedMotion) {
-    const Static = as as ElementType;
+    const Static = as as ElementType<{
+      className?: string;
+      children?: ReactNode;
+    }>;
     return <Static className={className}>{text}</Static>;
   }
 
