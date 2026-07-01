@@ -1,0 +1,3 @@
+/** Shared WhatsApp CTA styling for hero and contact sections. */
+export const WHATSAPP_CTA_CLASS =
+  "inline-flex w-full max-w-xs items-center justify-center gap-2.5 rounded-3xl border border-[var(--voltara-whatsapp)]/70 bg-[var(--voltara-whatsapp)]/55 px-7 py-4 text-sm font-semibold uppercase tracking-[0.15em] text-white shadow-[0_0_18px_rgba(23,153,86,0.45),inset_0_0_18px_rgba(23,153,86,0.2)] backdrop-blur-md transition-all hover:border-[var(--voltara-whatsapp)]/90 hover:bg-[var(--voltara-whatsapp)]/70 hover:shadow-[0_0_26px_rgba(23,153,86,0.6),inset_0_0_22px_rgba(23,153,86,0.25)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--voltara-gold)] focus-visible:ring-offset-2 focus-visible:ring-offset-transparent md:w-auto";

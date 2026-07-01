@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { WHATSAPP_URL } from "@/lib/whatsapp";
+import { WHATSAPP_CTA_CLASS } from "@/lib/whatsapp-button";
 import { WhatsAppIcon } from "./WhatsAppIcon";
 import {
   SUBTITLE_ANIMATION_DELAY,
@@ -11,38 +11,48 @@ import {
   VoltaraLogo,
 } from "./VoltaraLogo";
 
-type Phase = "intro" | "split";
+type Phase = "intro" | "exit" | "reveal";
 
 const PHASE_FLIP_DELAY_MS = (SUBTITLE_ANIMATION_DELAY + 0.7) * 1000;
-const SPLIT_SCALE = 0.62;
 const TRANSITION_EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
-const TITLE_CLASS =
-  "text-5xl font-bold text-[var(--voltara-navy)] sm:text-6xl md:text-7xl lg:text-8xl";
+const LOGO_TITLE_CLASS =
+  "font-bold text-[var(--voltara-navy)] text-[clamp(3rem,9vw,8rem)]";
 
-const SUBTITLE_CLASS =
-  "text-lg font-bold uppercase tracking-[0.45em] text-[var(--voltara-gold)] sm:text-xl md:text-2xl";
+const LOGO_SUBTITLE_CLASS =
+  "font-bold uppercase tracking-[0.45em] text-[var(--voltara-gold)] text-[clamp(1rem,1.6vw,1.75rem)]";
 
 const LOGO_SIZE_CLASS =
-  "h-52 w-52 sm:h-64 sm:w-64 md:h-80 md:w-80 lg:h-96 lg:w-96";
+  "h-[clamp(13rem,28vw,28rem)] w-[clamp(13rem,28vw,28rem)]";
 
-const LOGO_TITLE_OFFSET_CLASS =
-  "-mt-6 sm:-mt-8 md:-mt-10 lg:-mt-14";
+const LOGO_TITLE_OFFSET_CLASS = "-mt-[clamp(1.5rem,2.5vw,4rem)]";
 
-const LOGO_STACK_OFFSET_CLASS =
-  "-mt-10 sm:-mt-12 md:-mt-20 lg:-mt-24";
+const LOGO_STACK_OFFSET_CLASS = "-mt-[clamp(2.5rem,4vw,7rem)]";
 
-const PRIMARY_CTA_CLASS =
-  "inline-flex items-center justify-center rounded-full bg-[var(--voltara-navy)] px-7 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-[var(--voltara-cream)] transition-colors hover:bg-[var(--voltara-gold)] hover:text-[var(--voltara-navy)]";
+const HEADLINE_CLASS =
+  "font-bold tracking-[-0.03em] leading-[1.05] text-[clamp(2.65rem,6vw,5.75rem)] text-balance";
 
-const WHATSAPP_CTA_CLASS =
-  "inline-flex items-center justify-center gap-2.5 rounded-full bg-[var(--voltara-whatsapp)] px-7 py-3 text-sm font-semibold uppercase tracking-[0.15em] text-white transition-colors hover:bg-[#85b435]";
+const SAVE_MONEY_CLASS =
+  "uppercase text-[var(--voltara-navy)] text-[clamp(2rem,4.5vw,4.25rem)]";
 
-const BULLETS = [
-  "Designed for Lahore's weather, roofs, and energy needs",
-  "Ideal for homes, shops, offices, schools, and warehouses",
-  "Complete support from survey to installation and net metering",
-];
+const SUBTITLE_CLASS =
+  "w-full max-w-full text-pretty text-[clamp(1.25rem,1.6vw,1.875rem)] font-bold leading-relaxed text-[#011431] md:max-w-[min(36rem,calc(50vw-2rem))]";
+
+const revealContainerVariants: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.14, delayChildren: 0.08 },
+  },
+};
+
+const revealItemVariants: Variants = {
+  hidden: { opacity: 0, y: 72 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.85, ease: TRANSITION_EASE },
+  },
+};
 
 function LetterGroup({ letters }: { letters: string[] }) {
   return (
@@ -54,23 +64,9 @@ function LetterGroup({ letters }: { letters: string[] }) {
   );
 }
 
-function VoltaraTitle({ animated, delay }: { animated: boolean; delay: number }) {
-  if (!animated) {
-    return (
-      <h1 className={`relative inline-flex items-baseline ${TITLE_CLASS}`}>
-        <span className="absolute right-full top-0 flex gap-[0.35em] pr-[0.35em]">
-          <LetterGroup letters={["V", "O", "L"]} />
-        </span>
-        <span>T</span>
-        <span className="absolute left-full top-0 flex gap-[0.35em] pl-[0.35em]">
-          <LetterGroup letters={["A", "R", "A"]} />
-        </span>
-      </h1>
-    );
-  }
-
+function VoltaraTitle({ delay }: { delay: number }) {
   return (
-    <motion.h1 className={`relative inline-flex items-baseline ${TITLE_CLASS}`}>
+    <motion.h1 className={`relative inline-flex items-baseline ${LOGO_TITLE_CLASS}`}>
       <motion.span
         className="absolute right-full top-0 flex"
         initial={{ gap: "0.5em", paddingRight: "0.5em" }}
@@ -92,16 +88,7 @@ function VoltaraTitle({ animated, delay }: { animated: boolean; delay: number })
   );
 }
 
-function BrandText({ animated }: { animated: boolean }) {
-  if (!animated) {
-    return (
-      <div className="flex w-full flex-col items-center gap-3 text-center">
-        <VoltaraTitle animated={false} delay={0} />
-        <p className={SUBTITLE_CLASS}>SOLAR</p>
-      </div>
-    );
-  }
-
+function BrandText() {
   return (
     <motion.div
       className="flex w-full flex-col items-center gap-3 text-center"
@@ -109,9 +96,9 @@ function BrandText({ animated }: { animated: boolean }) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: TITLE_ANIMATION_DELAY, ease: "easeOut" }}
     >
-      <VoltaraTitle animated delay={TITLE_ANIMATION_DELAY} />
+      <VoltaraTitle delay={TITLE_ANIMATION_DELAY} />
       <motion.p
-        className={SUBTITLE_CLASS}
+        className={LOGO_SUBTITLE_CLASS}
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: SUBTITLE_ANIMATION_DELAY, ease: "easeOut" }}
@@ -122,187 +109,151 @@ function BrandText({ animated }: { animated: boolean }) {
   );
 }
 
-function CheckIcon() {
-  return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="var(--voltara-gold)"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-      className="mt-1 shrink-0"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  );
-}
-
-function BulletItem({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-start gap-3 text-[var(--voltara-navy)]">
-      <CheckIcon />
-      <span className="text-sm md:text-base">{children}</span>
-    </li>
-  );
-}
-
-function LogoStack({ animated }: { animated: boolean }) {
+function LogoStack() {
   return (
     <div className={`flex flex-col items-center ${LOGO_STACK_OFFSET_CLASS}`}>
       <VoltaraLogo className={LOGO_SIZE_CLASS} />
       <div className={LOGO_TITLE_OFFSET_CLASS}>
-        <BrandText animated={animated} />
+        <BrandText />
       </div>
     </div>
   );
 }
 
-function LogoBlock({ phase, animated }: { phase: Phase; animated: boolean }) {
-  if (!animated) {
-    return (
-      <div className="flex w-full justify-center md:scale-[0.62] md:[transform-origin:center]">
-        <LogoStack animated={false} />
-      </div>
-    );
-  }
-
-  const introTranslate =
-    phase === "intro"
-      ? "md:translate-x-[calc(50%+1.5rem)]"
-      : "md:translate-x-0";
-
+function LogoBlock({
+  phase,
+  onExitComplete,
+}: {
+  phase: Phase;
+  onExitComplete: () => void;
+}) {
   return (
-    <div
-      className={`flex w-full justify-center transition-transform duration-[900ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${introTranslate}`}
-    >
+    <div className="flex w-full justify-center">
       <motion.div
-        animate={{ scale: phase === "split" ? SPLIT_SCALE : 1 }}
-        transition={{ duration: 0.9, ease: TRANSITION_EASE }}
+        initial={{ scale: 1, opacity: 1 }}
+        animate={
+          phase === "exit"
+            ? { scale: 0.08, opacity: 0, filter: "blur(8px)" }
+            : { scale: 1, opacity: 1, filter: "blur(0px)" }
+        }
+        transition={{ duration: 0.85, ease: TRANSITION_EASE }}
         style={{ transformOrigin: "center center" }}
+        onAnimationComplete={() => {
+          if (phase === "exit") onExitComplete();
+        }}
       >
-        <LogoStack animated />
+        <LogoStack />
       </motion.div>
     </div>
   );
 }
 
-const rightPanelVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: { staggerChildren: 0.08, delayChildren: 0.2 },
-  },
-};
+function HeroRevealContent({ animated }: { animated: boolean }) {
+  const contentClassName =
+    "flex w-full max-w-[42rem] flex-col items-center gap-7 text-center md:items-start md:text-left";
 
-const rightItemVariants: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: "easeOut" },
-  },
-};
-
-function CTARow() {
-  return (
-    <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4 md:items-start">
-      <Link href="/contact" className={PRIMARY_CTA_CLASS}>
-        Get a free quote
-      </Link>
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={WHATSAPP_CTA_CLASS}
-      >
-        <WhatsAppIcon size={20} />
-        Contact us
-      </a>
-    </div>
-  );
-}
-
-function RightPanel({ phase, animated }: { phase: Phase; animated: boolean }) {
   if (!animated) {
     return (
-      <div className="flex flex-col items-center gap-6 text-center md:items-start md:text-left">
-        <h2 className="text-4xl font-bold leading-tight text-[var(--voltara-navy)] md:text-5xl lg:text-6xl">
-          Beat Rising Electricity Bills with Solar Built for Lahore.
-        </h2>
-        <p className="max-w-xl text-base text-[var(--voltara-navy)]/70 md:text-lg">
-          Switch to a professionally designed solar system for your home or
-          business. From consultation to installation and net metering, Voltara
-          Solar helps you save more, stay powered, and invest in long-term energy
-          independence.
-        </p>
-        <ul className="flex flex-col gap-3">
-          {BULLETS.map((bullet) => (
-            <BulletItem key={bullet}>{bullet}</BulletItem>
-          ))}
-        </ul>
-        <CTARow />
+      <div className={contentClassName}>
+        <h1 className={HEADLINE_CLASS}>
+          <span className={SAVE_MONEY_CLASS}>Save money</span>
+          <br />
+          <span className="voltara-shimmer inline-block font-normal italic text-transparent">
+            Go Solar
+          </span>
+        </h1>
+        <h3 className={SUBTITLE_CLASS}>
+          Lahore&apos;s trusted solar team for smarter savings, reliable power,
+          and long-term energy independence.
+        </h3>
+        <a
+          href={WHATSAPP_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={WHATSAPP_CTA_CLASS}
+        >
+          <WhatsAppIcon size={20} />
+          Contact us
+        </a>
       </div>
     );
   }
 
   return (
     <motion.div
-      className="flex flex-col items-center gap-6 text-center md:items-start md:text-left"
-      variants={rightPanelVariants}
+      className={contentClassName}
+      variants={revealContainerVariants}
       initial="hidden"
-      animate={phase === "split" ? "visible" : "hidden"}
+      animate="visible"
     >
-      <motion.h2
-        variants={rightItemVariants}
-        className="text-3xl font-bold leading-tight text-[var(--voltara-navy)] md:text-4xl lg:text-5xl"
+      <motion.h1 className={HEADLINE_CLASS} variants={revealItemVariants}>
+        <span className={SAVE_MONEY_CLASS}>Save money</span>
+        <br />
+        <span className="voltara-shimmer inline-block font-normal italic text-transparent">
+          Go Solar
+        </span>
+      </motion.h1>
+      <motion.h3 className={SUBTITLE_CLASS} variants={revealItemVariants}>
+        Lahore&apos;s trusted solar team for smarter savings, reliable power,
+        and long-term energy independence.
+      </motion.h3>
+      <motion.a
+        href={WHATSAPP_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={WHATSAPP_CTA_CLASS}
+        variants={revealItemVariants}
       >
-        Beat Rising Bills with Solar in Lahore
-      </motion.h2>
-      <motion.p
-        variants={rightItemVariants}
-        className="max-w-xl text-base text-[var(--voltara-navy)]/70 md:text-lg"
-      >
-        Reliable solar systems for homes and businesses across Lahore, built to lower costs and keep you powered. From consultation to installation and net metering, Voltara
-        Solar helps you save more, stay powered, and invest in long-term energy
-        independence.
-      </motion.p>
-      <motion.ul variants={rightItemVariants} className="flex flex-col gap-3">
-        {BULLETS.map((bullet) => (
-          <BulletItem key={bullet}>{bullet}</BulletItem>
-        ))}
-      </motion.ul>
-      <motion.div variants={rightItemVariants}>
-        <CTARow />
-      </motion.div>
+        <WhatsAppIcon size={20} />
+        Contact us
+      </motion.a>
     </motion.div>
   );
 }
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
-  const [phase, setPhase] = useState<Phase>("intro");
+  const [introCompleted, setIntroCompleted] = useState(false);
+  const [exitCompleted, setExitCompleted] = useState(false);
+
+  const phase: Phase = prefersReducedMotion
+    ? "reveal"
+    : exitCompleted
+      ? "reveal"
+      : introCompleted
+        ? "exit"
+        : "intro";
 
   useEffect(() => {
-    if (prefersReducedMotion) {
-      setPhase("split");
-      return;
-    }
+    if (prefersReducedMotion) return;
     const timer = window.setTimeout(
-      () => setPhase("split"),
+      () => setIntroCompleted(true),
       PHASE_FLIP_DELAY_MS,
     );
     return () => window.clearTimeout(timer);
   }, [prefersReducedMotion]);
 
   return (
-    <section className="relative min-h-screen w-full bg-[var(--voltara-cream)] px-6 pt-24 pb-12 md:pt-20">
-      <div className="mx-auto grid min-h-[calc(100vh-6rem)] max-w-7xl grid-cols-1 items-center gap-10 md:grid-cols-2 md:gap-12">
-        <LogoBlock phase={phase} animated={!prefersReducedMotion} />
-        <RightPanel phase={phase} animated={!prefersReducedMotion} />
-      </div>
+    <section className="relative min-h-screen w-full overflow-hidden bg-transparent px-[clamp(1rem,3vw,2.5rem)] pb-[clamp(2rem,4vw,4rem)] pt-[calc(var(--navbar-height)+0.5625rem)] sm:pt-[calc(var(--navbar-height)+0.75rem)] md:pt-[calc(var(--navbar-height)+0.9375rem)] xl:pt-[calc(var(--navbar-height)+1.125rem)]">
+      <div
+        aria-hidden="true"
+        className="voltara-readability-gradient pointer-events-none absolute inset-0 z-0"
+      />
+
+      {phase !== "reveal" && (
+        <div className="absolute inset-0 z-10 flex items-center justify-center px-6">
+          <LogoBlock
+            phase={phase}
+            onExitComplete={() => setExitCompleted(true)}
+          />
+        </div>
+      )}
+
+      {phase === "reveal" && (
+        <div className="relative z-10 mx-auto flex min-h-[calc(100svh-var(--navbar-height))] max-w-[1200px] items-center justify-center md:justify-start">
+          <HeroRevealContent animated={!prefersReducedMotion} />
+        </div>
+      )}
     </section>
   );
 }

@@ -1,22 +1,175 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:is(.dark *));
+
 :root {
   --voltara-cream: #faf8f3;
   --voltara-navy: #042b58;
   --voltara-gold: #f9ae0e;
-  --voltara-whatsapp: #96c93d;
+  --voltara-whatsapp: #179956;
   --background: var(--voltara-cream);
   --foreground: var(--voltara-navy);
+  --navbar-height: 3.75rem;
+
+  /* shadcn theme tokens */
+  --primary: var(--voltara-navy);
+  --primary-foreground: var(--voltara-cream);
+  --secondary: rgba(4, 43, 88, 0.08);
+  --secondary-foreground: var(--voltara-navy);
+  --muted: rgba(4, 43, 88, 0.06);
+  --muted-foreground: rgba(4, 43, 88, 0.65);
+  --accent: rgba(249, 174, 14, 0.18);
+  --accent-foreground: var(--voltara-navy);
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: rgba(4, 43, 88, 0.12);
+  --input: rgba(4, 43, 88, 0.12);
+  --ring: var(--voltara-gold);
+
+  /* Aurora background color tokens (shadcn/Tailwind palette) */
+  --white: #ffffff;
+  --black: #000000;
+  --transparent: transparent;
+  --blue-500: #3b82f6;
+  --blue-400: #60a5fa;
+  --blue-300: #93c5fd;
+  --indigo-300: #a5b4fc;
+  --violet-200: #ddd6fe;
 }
+
+@media (min-width: 768px)  { :root { --navbar-height: 4rem;   } }
+@media (min-width: 1280px) { :root { --navbar-height: 4.5rem; } }
+@media (min-width: 1920px) { :root { --navbar-height: 5rem;   } }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-league-spartan);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: var(--font-libre-baskerville);
+  --spacing-nav: var(--navbar-height);
+  --animate-aurora: aurora 60s linear infinite;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: var(--font-league-spartan), Arial, Helvetica, sans-serif;
+  font-family: var(--font-libre-baskerville), Georgia, serif;
+  position: relative;
+  min-height: 100%;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35)),
+    url("/SolarRain.jpg");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.nav-link {
+  position: relative;
+  display: inline-block;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 100%;
+  background: var(--voltara-gold);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.voltara-readability-gradient {
+  background: linear-gradient(
+    to right,
+    rgba(250, 248, 243, 0.94) 0%,
+    rgba(250, 248, 243, 0.82) 22%,
+    rgba(250, 248, 243, 0.58) 42%,
+    rgba(250, 248, 243, 0.28) 62%,
+    rgba(250, 248, 243, 0.1) 78%,
+    transparent 92%
+  );
+}
+
+@keyframes voltaraShimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes aurora {
+  from {
+    background-position: 50% 50%, 50% 50%;
+  }
+  to {
+    background-position: 350% 50%, 350% 50%;
+  }
+}
+
+.voltara-shimmer {
+  display: inline-block;
+  background-image: linear-gradient(
+    100deg,
+    var(--voltara-navy) 0%,
+    var(--voltara-navy) 30%,
+    var(--voltara-gold) 50%,
+    var(--voltara-navy) 70%,
+    var(--voltara-navy) 100%
+  );
+  background-size: 220% 100%;
+  background-repeat: repeat-x;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: voltaraShimmer 5.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .voltara-shimmer {
+    animation: none;
+    background: none;
+    color: inherit;
+    -webkit-text-fill-color: currentColor;
+  }
+
+  .animate-aurora {
+    animation: none;
+  }
 }
